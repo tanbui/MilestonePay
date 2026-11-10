@@ -41,9 +41,28 @@ function flag(value: string | undefined): boolean {
   return value === "1" || value?.toLowerCase() === "true";
 }
 
+/** Trims whitespace and one pair of surrounding quotes (easy to paste into a host's env UI). */
 function clean(value: string | undefined): string | undefined {
-  const v = value?.trim();
+  let v = value?.trim();
+  if (v && v.length >= 2 && (v[0] === '"' || v[0] === "'") && v[v.length - 1] === v[0]) v = v.slice(1, -1).trim();
   return v ? v : undefined;
+}
+
+const DEFAULT_TIME_ZONE = "America/Los_Angeles";
+let warnedTimeZone = false;
+
+function validTimeZone(value: string | undefined): string | undefined {
+  if (!value) return undefined;
+  try {
+    new Intl.DateTimeFormat("en-US", { timeZone: value });
+    return value;
+  } catch {
+    if (!warnedTimeZone) {
+      warnedTimeZone = true;
+      console.warn(`[milestone-pay] APP_TIMEZONE "${value}" isn't a valid IANA time zone; using ${DEFAULT_TIME_ZONE}.`);
+    }
+    return undefined;
+  }
 }
 
 export function getConfig(): AppConfig {
@@ -81,7 +100,7 @@ export function getConfig(): AppConfig {
       mode: databaseUrl ? "postgres" : "memory",
       databaseUrl,
     },
-    timeZone: clean(env.APP_TIMEZONE) ?? "America/Los_Angeles",
+    timeZone: validTimeZone(clean(env.APP_TIMEZONE)) ?? DEFAULT_TIME_ZONE,
     demoToday: demoToday && /^\d{4}-\d{2}-\d{2}$/.test(demoToday) ? demoToday : undefined,
     agencyName: clean(env.AGENCY_NAME) ?? "Lotus Dev Studio",
     defaultTermDays: Number(env.DEFAULT_TERM_DAYS) > 0 ? Number(env.DEFAULT_TERM_DAYS) : 15,

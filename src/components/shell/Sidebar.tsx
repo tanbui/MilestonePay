@@ -1,13 +1,18 @@
 import Link from "next/link";
+import { connection } from "next/server";
 import { Suspense } from "react";
 import { Logo } from "@/components/ui/icons";
 import { approvalQueue, overdueDays } from "@/lib/domain/rules";
+import { getConfig } from "@/lib/env";
 import { loadPageData } from "@/lib/queries";
 import { NavLinks } from "./NavLinks";
 import { NavList } from "./NavList";
 
 async function LiveNav() {
-  const { state, today } = await loadPageData();
+  // The sidebar lives in the root layout, so it must never take the page down.
+  const data = await loadPageData().catch(() => null);
+  if (!data) return <NavLinks />;
+  const { state, today } = data;
   return (
     <NavLinks
       counts={{
@@ -20,7 +25,7 @@ async function LiveNav() {
 }
 
 async function ModeCard() {
-  const { config } = await loadPageData();
+  const config = getConfig();
   const paypal = config.paypal.mode === "sandbox";
   const claude = config.ai.mode === "claude";
   return (
@@ -40,6 +45,11 @@ async function ModeCard() {
   );
 }
 
+async function DynamicModeCard() {
+  await connection();
+  return <ModeCard />;
+}
+
 export function Sidebar() {
   return (
     <aside className="flex flex-[1_1_232px] flex-col gap-7 bg-side px-4 py-6 text-side-text">
@@ -52,7 +62,7 @@ export function Sidebar() {
       </Suspense>
       <div className="mt-auto">
         <Suspense fallback={<div className="h-24 rounded-xl border border-side-line" />}>
-          <ModeCard />
+          <DynamicModeCard />
         </Suspense>
       </div>
     </aside>

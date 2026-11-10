@@ -10,6 +10,10 @@ export default function ErrorPage({ error, reset }: { error: Error & { digest?: 
         {error.message || "The page couldn't load."}
         {error.digest ? ` (ref ${error.digest})` : ""}
       </p>
+      <p className="text-[13px] text-muted">
+        On a deployed site the details are in the host&apos;s function logs (search for <code>[milestone-pay]</code>), and{" "}
+        <a href="/api/health">/api/health</a> checks the configuration.
+      </p>
       <button type="button" onClick={reset} className={buttonClass("primary")}>
         Try again
       </button>

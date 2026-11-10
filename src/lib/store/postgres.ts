@@ -14,14 +14,33 @@ const ROW_ID = "default";
 type Sql = ReturnType<typeof postgres>;
 const globalForSql = globalThis as unknown as { __milestonePaySql?: Sql; __milestonePayTableReady?: Promise<void> };
 
-function client(url: string): Sql {
+/**
+ * Connection strings copied from Prisma or hosting docs often carry query
+ * parameters that Postgres itself rejects ("unrecognized configuration
+ * parameter"). Drop those before connecting.
+ */
+const NON_POSTGRES_PARAMS = ["pgbouncer", "connection_limit", "pool_timeout", "schema", "supa", "statement_cache_size", "socket_timeout", "connect_timeout"];
+
+export function cleanDatabaseUrl(raw: string): string {
+  try {
+    const url = new URL(raw);
+    for (const key of NON_POSTGRES_PARAMS) url.searchParams.delete(key);
+    return url.toString();
+  } catch {
+    return raw;
+  }
+}
+
+function client(rawUrl: string): Sql {
   if (!globalForSql.__milestonePaySql) {
+    const url = cleanDatabaseUrl(rawUrl);
     const local = /localhost|127\.0\.0\.1/.test(url);
     globalForSql.__milestonePaySql = postgres(url, {
       max: 1,
       prepare: false, // compatible with transaction-mode poolers
       ssl: local ? false : "require",
       idle_timeout: 20,
+      connect_timeout: 10,
     });
   }
   return globalForSql.__milestonePaySql;

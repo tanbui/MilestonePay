@@ -16,6 +16,13 @@ export interface PageData {
 export async function loadPageData(): Promise<PageData> {
   await connection();
   const config = getConfig();
-  const state = await getStore().read();
-  return { state, today: today(config), config };
+  try {
+    const state = await getStore().read();
+    return { state, today: today(config), config };
+  } catch (error) {
+    // Production hides server error messages from the browser; this line is
+    // what shows up in the host's function logs.
+    console.error(`[milestone-pay] Couldn't load app data from the ${config.store.mode} store:`, error);
+    throw error;
+  }
 }
