@@ -1,0 +1,12 @@
+{
+  "id": "WH-SAMPLE-INVOICE-PAID",
+  "event_type": "INVOICING.INVOICE.PAID",
+  "resource_type": "invoices",
+  "summary": "An invoice was paid",
+  "resource": {
+    "invoice": {
+      "id": "REPLACE_WITH_PAYPAL_INVOICE_ID",
+      "status": "PAID"
+    }
+  }
+}

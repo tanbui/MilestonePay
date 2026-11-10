@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+/* Design tokens from the Milestone Pay mockup. Utilities like `bg-ink`,
+   `text-muted` and `border-line` come from these. */
+@theme {
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --color-ink: #14171f;
+  --color-ink-hover: #2a2f3a;
+  --color-ink-2: #3d4350;
+  --color-muted: #5b6170;
+  --color-faint: #a3aab6;
+  --color-canvas: #f5f6f8;
+  --color-raised: #fafbfc;
+  --color-chip: #f0f1f4;
+  --color-line: #e3e6eb;
+  --color-line-soft: #eef0f3;
+  --color-line-strong: #d5d9e0;
+
+  --color-side: #14171f;
+  --color-side-active: #252a35;
+  --color-side-line: #2e3441;
+  --color-side-text: #c9ced8;
+  --color-side-muted: #8b93a3;
+
+  --color-accent: #4338ca;
+  --color-accent-hover: #3730a3;
+  --color-accent-soft: #efeefb;
+  --color-accent-line: #c7c3f0;
+
+  --color-ok: #0f766e;
+  --color-ok-hover: #115e59;
+  --color-ok-soft: #e6f4f1;
+  --color-ok-line: #b9ddd6;
+
+  --color-warn: #c2410c;
+  --color-warn-ink: #9a3412;
+  --color-warn-soft: #fff1e8;
+  --color-warn-line: #f5c9ae;
+  --color-warn-wash: #fffbf7;
+
+  --color-info: #1e40af;
+  --color-info-soft: #eaf0fe;
+  --color-info-line: #93b4f5;
+
+  --color-progress: #cbd5e1;
+  --color-progress-track: #e8ecf1;
+}
+
+html {
+  background: var(--color-canvas);
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Visible focus for keyboard users everywhere. */
+:where(a, button, input, select, textarea, summary):focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.bar-blocked {
+  background: repeating-linear-gradient(135deg, #fff7ed 0 6px, #ffedd5 6px 12px);
+}
