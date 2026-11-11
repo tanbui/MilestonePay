@@ -130,6 +130,20 @@ Each integration sits behind an interface (`PaypalGateway`, `AiGateway`, `Store`
 - **Untrusted documents.** SOW text and evidence are passed to Claude as data, and the prompts tell it never to follow instructions inside them. The agent's output is schema-validated and only ever proposes actions; a person approves anything that moves money.
 - **PayPal limits.** PayPal allows two invoice reminders per invoice per day, and Payouts must be enabled on the sandbox business account (it is by default).
 
+
+## PayPal Hackathon
+
+**Submission**: https://devpost.com/software/milestone-pay-x7c8b9
+
+## App
+**Link**: https://milestonepay-six.vercel.app/
+
+## Video
+**Link**: https://www.youtube.com/watch?v=EI8aDGmfd1Q
+
+## Repo
+**Link**: https://github.com/tanbui/MilestonePay
+
 ## License
 
 [MIT](LICENSE)
